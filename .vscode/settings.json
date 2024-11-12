@@ -1,0 +1,12 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.associations": {
+        "string": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp",
+        "new": "cpp"
+    },
+    "editor.tabCompletion": "on",
+    "editor.suggest.localityBonus": true,
+    "emmet.showSuggestionsAsSnippets": true
+}

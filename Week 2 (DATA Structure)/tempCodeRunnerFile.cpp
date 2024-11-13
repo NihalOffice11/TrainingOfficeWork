@@ -1,1 +1,3 @@
-< v.capacity() << endl;
+
+            VContainer = nullptr;
+            capacity = 0;

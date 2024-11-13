@@ -58,7 +58,7 @@ int main() {
 
 
     vector<int> v;
-    v.reserve(16);
+   // v.reserve(16);
     vector<int> v1(7);
 
 

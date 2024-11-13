@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -59,37 +59,6 @@ public:
     }*/
 };
 
-// Derived class: SavingsAccount
-/*class SavingsAccount : public BankAccount {
-private:
-    double interestRate; // Interest rate for the savings account
-
-public:
-    // Constructor
-    SavingsAccount(int accNum, string holder, double initialBalance, double rate)
-        : BankAccount(accNum, holder, initialBalance), interestRate(rate) {
-        cout << "SavingsAccount created for " << accountHolder << " with interest rate " << interestRate << "%" << endl;
-    }
-
-    // Method to add interest to the balance
-    void addInterest() {
-        double interest = balance * (interestRate / 100);
-        balance += interest;
-        cout << "Interest added: $" << interest << ". New balance: $" << balance << endl;
-    }
-
-    // Override display method to include interest rate
-    void display() const override {
-        BankAccount::display(); // Call base class display
-        cout << "Interest Rate: " << interestRate << "%" << endl;
-    }
-
-    // Destructor
-    ~SavingsAccount() override {
-        cout << "SavingsAccount for " << accountHolder << " is being closed." << endl;
-    }
-};*/
-
 class BankBranch
 {
     private:
@@ -98,14 +67,14 @@ class BankBranch
     vector<BankAccount> accounts;
     
     public:
-    BankBranch(const string& name, string& address) : 
+    BankBranch(const string& name, const string& address) : 
         branchName(name), branchAddress(address){}
     
     void addAccount(int accountNum, const string& accountName, double balance)
     {
         BankAccount newAcc(accountNum, accountName, balance);
         accounts.push_back(newAcc);
-        cout<<"Account created for "<<accountName <<" with account number: "<<accountNum;
+        cout<<"Account created for "<<accountName <<" with account number: "<<accountNum <<endl;
     }
     
     //Find an account number 
@@ -141,66 +110,99 @@ class BankBranch
 class BankSystem
 {
     private:
-    vector<BankBranch> branches;
+    vector<vector<BankAccount>> branches;
     
     public:
-    
-    //Add new branch to the system
-    void addBranch(const string& branchName, const string& branchAddress)
+    //Initialize specific number of branches in the constructor
+    BankSystem(int noOfBranches)
     {
-        branches.emplace_back(branchName, branchAddress);
-        cout<<"Branch created: "<< branchName;
+        branches.resize(noOfBranches);
     }
     
-    BankBranch* findBranch(const string& name)
+    void addAccountToBranch(int branchIndex, const BankAccount account)
     {
-        for(auto& branch: branches)
+        if(branchIndex < branches.size())
         {
-            if(branch.getBranch() == name)
-            {
-                return &branch;
-            }
+            branches[branchIndex].push_back(account);
         }
-        cout<<"Branch: "<<name<<endl;
-        return nullptr;
+        else
+        {
+            cout<<" Branch index out of range" << endl;
+        }
     }
     
     //Display all branches
     void displayAllBranches() const
     {
-        cout<<"Bank Branches: "<<endl;
-        for(const auto& branch: branches)
+        for(int i=0; i< branches.size(); i++)
         {
-            cout<<"Branch Name: "<< branch.getBranch()<<endl;
-            branch.displayAllAccs();
-            cout<<endl;
+            for(const auto& account : branches[i])
+            {
+                account.display();
+            }
         }
     }
+    
+    void depositToAccount(int branchIndex, int accountNum, double amount)
+    {
+        if(branchIndex < branches.size())
+        {
+            for(auto& account: branches[branchIndex])
+            {
+                if(account.getAccountNumber() == accountNum)
+                {
+                    account.deposit(amount);
+                    cout<<"Deposited " <<amount<< " to account "<< accountNum<< " in branch "<< branchIndex<<endl;
+                    return;
+                }
+            }
+            cout<<"Account not found in branch"<<endl;
+        }
+        else
+        {
+            cout<<"Branch index out of range"<<endl;
+        }
+    }
+    
+    void withdrawFromAccount(int branchIndex, int accountNum, double amount)
+    {
+        if(branchIndex < branches.size())
+        {
+            for(auto& account: branches[branchIndex])
+            {
+                if(account.getAccountNumber() == accountNum)
+                {
+                    account.withdraw(amount);
+                    return;
+                }
+            }
+            cout<<"Account not found in branch "<< branchIndex << endl;
+        }
+        else
+        {
+            cout<<"Branch index out of range"<<endl;
+        }
+    }
+    
+    
 };
 
 int main() {
-    BankSystem bank;
-    bank.addBranch("HitechCity", "Opposite HitechCity");
-    bank.addBranch("Jubilee Hills", "Road No 45");
+    BankSystem bank(2);
+    bank.addAccountToBranch(0, BankAccount(10001, "User1", 10000.00));
+    bank.addAccountToBranch(0, BankAccount(2001, "User2", 100.00));
+    bank.addAccountToBranch(1, BankAccount(3001, "User21", 500.00));
+    bank.addAccountToBranch(1, BankAccount(4001, "User22", 500000.00));
+    bank.addAccountToBranch(1, BankAccount(50001, "User23", 40000.00));
     
-    BankBranch* branch1 = bank.findBranch("Jubilee Hills");
-    if(branch1)
-    {
-        branch1->addAccount(123456, "ABC", 10000);
-        branch1->addAccount(87684364, "User3", 300);
-        branch1->addAccount(7647343, "user4", 90000);
-    }
     bank.displayAllBranches();
-    if(branch1)
-    {
-        BankAccount* account = branch1->findAccount(123456);
-        if(account)
-        {
-            account->deposit(3000);
-            account->display();
-            account->withdraw(6000.00);
-        }
-    }
+    cout<<"Deposit"<<endl;
+    bank.depositToAccount(0, 2001, 300.0);
+    bank.depositToAccount(1, 50001, 1000.0);
+    
+    bank.withdrawFromAccount(1, 50001, 30000.0);
+    bank.withdrawFromAccount(0, 10001, 5000.0);
+    
 
     return 0;
 }

@@ -22,17 +22,10 @@ private:
 
 public:
     VVector() {
-        VContainer = new T[1];
+        VContainer = nullptr;
         capacity = 0;
         size = 0;
     }
-
-  
-    
-
-
-
-
     void push_back(const T& data) {
         if (size == capacity) {
             if (capacity == 0) {
@@ -111,7 +104,6 @@ int main() {
     cout << "Vector Implementation" << endl;
     v.push_back(45);
     cout<<v[0]<<endl;
-   // v.displayVector();
     cout << "After 1st push_back Size:  " << v.getSize() << " Capacity: " << v.getCapacity() << endl;
     v.push_back(12);
     cout << "After 2nd push_back Size:  " << v.getSize() << " Capacity: " << v.getCapacity() << endl;
@@ -122,7 +114,6 @@ int main() {
 
     v.push_back(56);
     v.push_back(122);
-    v.displayVector();
 
     cout << "After 4th and 5th push_back Size:  " << v.getSize() << " Capacity: " << v.getCapacity() << endl;
 
